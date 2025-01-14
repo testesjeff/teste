@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Vídeos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #010101;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #808080;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        section {
+            margin-top: 70px;
+            column-count: 3;
+            column-gap: 10px;
+            padding: 10px;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: block;
+            position: relative;
+        }
+
+        img {
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px; /* Tamanho do ícone */
+            color: white;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Estilo do pop-up */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            position: relative;
+            max-width: 90%; /* Tamanho máximo */
+            max-height: 90%;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 0 auto; /* Centraliza o conteúdo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content img,
+        .popup-content video {
+            width: 100%;
+            height: auto;
+        }
+
+        .taxa-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Esconde inicialmente */
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .taxa-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 0 20px; /* Afastamento lateral do container */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin: 0 20px; /* Margem para o espaçamento lateral */
+        }
+        .taxa-header {
+            width: 100%;
+            background-color: #E74C3C;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .taxa-header span {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .taxa-header .timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fffb00;
+        }
+        .taxa-content {
+            background-color: white;
+            padding: 10px 20px; /* Diminuiu o padding para reduzir a altura */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+        }
+        .taxa-content h2 {
+            margin: 30px 0 20px; /* Diminuiu o espaçamento para reduzir a altura */
+            font-size: 20px;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+        .taxa-content p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .taxa-content button {
+            padding: 12px 20px;
+            background-color: #1d7530;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .taxa-content .emoji {
+            font-size: 40px;
+            margin-bottom: -20px;
+        }
+        /* Afastamento entre as taxas */
+        .taxa-container + .taxa-container {
+            margin-top: 20px; /* Adiciona afastamento entre o cronômetro e a taxa de pagamento */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ARINHA LEITE - GALERIA</h1>
+    </header>
+
+    <section>
+        <div style="position: relative;">
+            <video muted>
+                <source src="https://www.dropbox.com/scl/fi/uebska1nxj6pngponxc2r/0gm0h6g7mh5srhxbm9p28_source.webm?rlkey=37mh93kc4s31r5a4vlnosvgb5&st=lld77bk3&raw=1" type="video/webm">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <i class="fas fa-play play-icon"></i>
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <video muted>
+                <source src="https://www.dropbox.com/scl/fi/uebska1nxj6pngponxc2r/0gm0h6g7mh5srhxbm9p28_source.webm?rlkey=37mh93kc4s31r5a4vlnosvgb5&st=lld77bk3&raw=1" type="video/webm">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <i class="fas fa-play play-icon"></i>
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <video muted>
+                <source src="https://www.dropbox.com/scl/fi/uebska1nxj6pngponxc2r/0gm0h6g7mh5srhxbm9p28_source.webm?rlkey=37mh93kc4s31r5a4vlnosvgb5&st=lld77bk3&raw=1" type="video/webm">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <i class="fas fa-play play-icon"></i>
+        </div>
+        
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <video muted>
+                <source src="https://www.dropbox.com/scl/fi/uebska1nxj6pngponxc2r/0gm0h6g7mh5srhxbm9p28_source.webm?rlkey=37mh93kc4s31r5a4vlnosvgb5&st=lld77bk3&raw=1" type="video/webm">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <i class="fas fa-play play-icon"></i>
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <img src="https://www.dropbox.com/scl/fi/3z0rbneyj9ta5aqo8tby0/photo_17_27-01-2024_04-52-10.webp?rlkey=9zdq1mq3byak33314fupsxf2x&st=0j3w6b19&raw=1" alt="Random Image 1">
+        </div>
+
+        <div style="position: relative;">
+            <video muted>
+                <source src="https://www.dropbox.com/scl/fi/uebska1nxj6pngponxc2r/0gm0h6g7mh5srhxbm9p28_source.webm?rlkey=37mh93kc4s31r5a4vlnosvgb5&st=lld77bk3&raw=1" type="video/webm">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <i class="fas fa-play play-icon"></i>
+        </div>
+    </section>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content" id="popupContent"></div>
+    </div>
+
+    <div class="taxa-overlay" id="taxa-initial">
+        <div class="taxa-container">
+            <div class="taxa-header">
+                <span>O preço vai aumentar em:</span>
+                <span class="timer" id="countdown-timer">17:00</span>
+            </div>
+            <div class="taxa-content">
+                <h2>Acesso Premium Por <span style="color: #1d7530;">R$9,90</span></h2>
+                <p>Para acessar o conteúdo exclusivo, é necessário pagar a taxa de R$9,90 via PIX.</p>
+                <button id="pay-pix-button">Pagar Taxa</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="taxa-overlay" id="taxa-pix-copied" style="display: none;">
+        <div class="taxa-container">
+            <div class="taxa-header">
+                <span>O preço vai aumentar em:</span>
+                <span class="timer" id="countdown-timer-copy">17:00</span>
+            </div>
+            <div class="taxa-content">
+                <div class="emoji">😊</div>
+                <h2>PIX Copiado!</h2>
+                <p>Abra o aplicativo do seu banco e faça o pagamento. O acesso será liberado imediatamente.</p>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const images = document.querySelectorAll("img");
+    const playIcons = document.querySelectorAll(".play-icon");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const popupContent = document.getElementById("popupContent");
+    const videos = document.querySelectorAll("video");
+    const dragHint = document.createElement("div");
+    const taxaOverlay = document.getElementById("taxa-initial");
+    const taxaOverlayCopy = document.getElementById("taxa-pix-copied");
+    const countdownTimer = document.getElementById("countdown-timer");
+    const countdownTimerCopy = document.getElementById("countdown-timer-copy");
+    const payButton = document.getElementById("pay-pix-button");
+
+    let currentPlayingVideo = null;
+    let scrollDisabled = false;
+    let currentPopupIndex = -1;
+    let startX = 0;
+    let hideDragHintTimeout;
+    let hasDisplayedDragHint = false; // Verifica se já exibiu a mensagem
+    let taxaPopupDisplayed = false; // Flag para verificar se o pop-up de taxa foi exibido
+    let countdownTime = 17 * 60; // Tempo inicial de 17 minutos (em segundos)
+    let countdownInterval;
+
+    // Estilização do aviso "Arraste pro lado"
+    dragHint.textContent = "Arraste pro lado";
+    dragHint.style.position = "fixed";
+    dragHint.style.top = "10px";
+    dragHint.style.left = "50%";
+    dragHint.style.transform = "translateX(-50%)";
+    dragHint.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+    dragHint.style.color = "#fff";
+    dragHint.style.padding = "10px 20px";
+    dragHint.style.borderRadius = "5px";
+    dragHint.style.fontSize = "14px";
+    dragHint.style.fontWeight = "bold";
+    dragHint.style.zIndex = "9999";
+    dragHint.style.opacity = "0"; // Invisível por padrão
+    dragHint.style.transition = "opacity 0.5s ease"; // Transição suave
+    document.body.appendChild(dragHint);
+    
+    // Função para atualizar o contador
+    function updateCountdown() {
+        let minutes = Math.floor(countdownTime / 60);
+        let seconds = countdownTime % 60;
+        countdownTimer.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        countdownTimerCopy.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    }
+
+    // Função para iniciar o contador de contagem regressiva
+    function startCountdown() {
+        countdownInterval = setInterval(() => {
+            countdownTime--;
+            updateCountdown();
+            if (countdownTime <= 0) {
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+    }
+
+    // Função para desabilitar todas as funções do site (rolagem e interação)
+    function disableSite() {
+        scrollDisabled = true;
+        document.body.style.overflow = "hidden"; // Desabilita o scroll
+    }
+
+    // Função para habilitar o site novamente
+    function enableSite() {
+        scrollDisabled = false;
+        document.body.style.overflow = ""; // Restaura o scroll
+    }
+
+    // Função para copiar a palavra "oi" para a área de transferência
+    function copyToClipboard(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+    }
+
+    // Função para pausar e ocultar pop-ups de imagem/vídeo
+    function pauseAndHidePopups() {
+        if (popupOverlay.style.display === "flex") {
+            popupOverlay.style.display = "none";
+            popupContent.innerHTML = "";
+        }
+    }
+
+    // Função para abrir o pop-up de taxa
+    function openTaxaPopup() {
+        if (taxaPopupDisplayed) return; // Não exibe novamente se já foi exibido
+
+        pauseAndHidePopups(); // Oculta qualquer pop-up de imagem/vídeo
+        pauseAllVideos(); // Pausa todos os vídeos em reprodução
+        disableSite(); // Desativa o site
+        taxaOverlay.style.display = 'flex'; // Exibe o pop-up de taxa
+        startCountdown(); // Inicia o contador
+        taxaPopupDisplayed = true; // Marca o pop-up como exibido
+    }
+
+    // Função para pausar todos os vídeos em reprodução
+    function pauseAllVideos() {
+        videos.forEach(video => {
+            if (!video.paused) {
+                video.pause();
+            }
+        });
+    }
+
+    // Função para fechar o pop-up de taxa inicial e abrir o pop-up de "PIX Copiado"
+    function closeTaxaPopup() {
+        taxaOverlay.style.display = 'none'; // Fecha o pop-up de taxa
+        taxaOverlayCopy.style.display = 'flex'; // Abre o pop-up de "PIX Copiado"
+        copyToClipboard("oi"); // Copia a palavra "oi"
+    }
+
+    // Função para fechar o pop-up de "PIX Copiado" e liberar o site
+    function closeTaxaCopyPopup() {
+        taxaOverlayCopy.style.display = 'none'; // Fecha o pop-up de "PIX Copiado"
+        enableSite(); // Restaura as funções do site
+    }
+
+    // Configuração para mostrar o pop-up de taxa 30 segundos depois
+    setTimeout(openTaxaPopup, 30000); // Espera 30 segundos para mostrar o pop-up de taxa
+
+    // Event listener para o botão de pagar a taxa
+    payButton.addEventListener("click", () => {
+        closeTaxaPopup();
+    });
+
+    // Impede que o segundo pop-up seja fechado clicando fora dele
+    taxaOverlayCopy.addEventListener("click", (e) => {
+        if (e.target === taxaOverlayCopy) {
+            e.stopPropagation(); // Impede o fechamento ao clicar fora
+        }
+    });
+
+    // Ação para desabilitar a rolagem do site enquanto o pop-up estiver visível
+    document.addEventListener('wheel', (e) => {
+        if (scrollDisabled) {
+            e.preventDefault(); // Impede a rolagem do site
+        }
+    }, { passive: false });
+
+    // Atualiza o contador inicial
+    updateCountdown();
+
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+    }
+
+    function playNextVideo(currentVideo) {
+        const index = Array.from(videos).indexOf(currentVideo);
+        for (let i = index + 1; i < videos.length; i++) {
+            if (isElementInViewport(videos[i])) {
+                if (currentPlayingVideo) {
+                    currentPlayingVideo.pause();
+                    const currentPlayIcon = currentPlayingVideo.parentElement.querySelector('.play-icon');
+                    if (currentPlayIcon) {
+                        currentPlayIcon.style.display = 'block'; // Mostra o botão de play do vídeo pausado
+                    }
+                }
+                videos[i].play();
+                const playIcon = videos[i].parentElement.querySelector('.play-icon');
+                if (playIcon) {
+                    playIcon.style.display = 'none'; // Esconde o botão de play do vídeo que está tocando
+                }
+                currentPlayingVideo = videos[i];
+                return;
+            }
+        }
+    }
+
+    function handleVideoEnd() {
+        if (currentPlayingVideo) {
+            currentPlayingVideo.addEventListener("ended", () => {
+                playNextVideo(currentPlayingVideo); // Chama a função para tocar o próximo vídeo
+            });
+        }
+    }
+
+    function handleScroll() {
+        if (scrollDisabled) return; // Desabilita o scroll quando o pop-up está ativo
+        let foundVisibleVideo = false;
+
+        videos.forEach(video => {
+            const playIcon = video.parentElement.querySelector('.play-icon');
+
+            if (isElementInViewport(video) && !foundVisibleVideo) {
+                if (currentPlayingVideo !== video) {
+                    if (currentPlayingVideo) {
+                        currentPlayingVideo.pause();
+                        const currentPlayIcon = currentPlayingVideo.parentElement.querySelector('.play-icon');
+                        if (currentPlayIcon) {
+                            currentPlayIcon.style.display = 'block'; // Mostra o botão de play do vídeo pausado
+                        }
+                    }
+                    video.play();
+                    const playIcon = video.parentElement.querySelector('.play-icon');
+                    if (playIcon) {
+                        playIcon.style.display = 'none'; // Esconde o botão de play do vídeo que está tocando
+                    }
+                    currentPlayingVideo = video;
+                    handleVideoEnd(); // Adiciona o evento para reproduzir o próximo vídeo ao final
+                }
+                foundVisibleVideo = true;
+            } else {
+                video.pause();
+                if (playIcon) playIcon.style.display = 'block'; // Mostra o botão de play
+            }
+        });
+
+        if (!foundVisibleVideo && currentPlayingVideo) {
+            currentPlayingVideo.pause();
+            currentPlayingVideo = null;
+        }
+    }
+
+    function pauseAllVideos() {
+        videos.forEach(video => {
+            video.pause();
+            const playIcon = video.parentElement.querySelector('.play-icon');
+            if (playIcon) playIcon.style.display = 'block'; // Mostra o botão de play
+        });
+    }
+
+    function disableScroll() {
+        scrollDisabled = true;
+        document.body.style.overflow = "hidden"; // Remove o scroll do site
+    }
+
+    function enableScroll() {
+        scrollDisabled = false;
+        document.body.style.overflow = ""; // Restaura o scroll do site
+    }
+
+    function showDragHint() {
+        if (hasDisplayedDragHint) return; // Não exibe se já foi mostrado
+
+        clearTimeout(hideDragHintTimeout); // Cancela qualquer temporizador anterior
+        dragHint.style.opacity = "1"; // Mostra o aviso
+
+        // Define um temporizador para esconder o aviso após 3 segundos
+        hideDragHintTimeout = setTimeout(() => {
+            dragHint.style.opacity = "0"; // Suavemente esconde o aviso
+        }, 3000);
+
+        hasDisplayedDragHint = true; // Marca que o aviso foi exibido
+    }
+
+    function hideDragHint() {
+        dragHint.style.opacity = "0"; // Esconde o aviso
+        clearTimeout(hideDragHintTimeout); // Cancela o temporizador, se necessário
+    }
+
+    function openPopup(content) {
+        pauseAllVideos(); // Pausa todos os vídeos do site
+        disableScroll();  // Desabilita o scroll do fundo do site
+        popupOverlay.style.display = 'flex';
+        showDragHint(); // Mostra o aviso "Arraste pro lado" apenas na primeira vez
+
+        const newContent = content.cloneNode(true);
+        newContent.style.maxWidth = '90%';
+        newContent.style.maxHeight = '90%';
+
+        if (newContent.tagName === "VIDEO") {
+            newContent.setAttribute("controls", "controls");
+            newContent.setAttribute("loop", "loop");
+            newContent.play();
+        }
+
+        popupContent.appendChild(newContent);
+
+        const allContents = [...images, ...videos];
+        currentPopupIndex = allContents.indexOf(content);
+    }
+
+    function closePopupOnClickOutside(event) {
+        if (event.target === popupOverlay) {
+            popupOverlay.style.display = 'none';
+            popupContent.innerHTML = '';
+            enableScroll(); // Reativa o scroll do site ao fechar o pop-up
+            hideDragHint(); // Esconde o aviso "Arraste pro lado"
+            handleScroll(); // Restaura o estado dos vídeos no fundo
+        }
+    }
+
+    function navigatePopup(direction) {
+        const allContents = Array.from(images).concat(Array.from(videos));
+        const totalContents = allContents.length;
+
+        // Calcula o próximo índice
+        currentPopupIndex = (currentPopupIndex + direction + totalContents) % totalContents;
+
+        // Atualiza o conteúdo do pop-up
+        const content = allContents[currentPopupIndex];
+        popupContent.innerHTML = '';
+        openPopup(content);
+    }
+
+    popupOverlay.addEventListener("touchstart", event => {
+        startX = event.touches[0].clientX;
+    });
+
+    popupOverlay.addEventListener("touchend", event => {
+        const endX = event.changedTouches[0].clientX;
+        const deltaX = endX - startX;
+
+        if (deltaX > 50) {
+            navigatePopup(-1); // Deslizar para a direita
+        } else if (deltaX < -50) {
+            navigatePopup(1); // Deslizar para a esquerda
+        }
+    });
+
+    popupOverlay.addEventListener("click", closePopupOnClickOutside);
+
+    images.forEach(img => {
+        img.addEventListener('click', () => {
+            openPopup(img);
+        });
+    });
+
+    videos.forEach(video => {
+        video.addEventListener('click', () => {
+            openPopup(video);
+        });
+    });
+
+    document.addEventListener("keydown", event => {
+        if (popupOverlay.style.display === 'flex') {
+            if (event.key === "ArrowRight") {
+                navigatePopup(1); // Próxima imagem ou vídeo
+            } else if (event.key === "ArrowLeft") {
+                navigatePopup(-1); // Imagem ou vídeo anterior
+            } else if (event.key === "Escape") {
+                popupOverlay.style.display = 'none';
+                popupContent.innerHTML = '';
+                enableScroll();
+                hideDragHint();
+            }
+        }
+    });
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+</script>
+    
+</body>
+</html>
+
+oioi
