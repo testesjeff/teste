@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galeria de Vídeos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
+
         body {
             background-color: #010101;
             margin: 0;
@@ -227,7 +229,7 @@
             display: inline-block;
         }
 
-        .play-circle, .play-circlee {
+        .play-circle, .play-circle2 {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -241,30 +243,33 @@
             justify-content: center;
         }
 
-        .play-circle i, .play-circlee i {
+        .play-circle {
+            opacity: 0; /* Esconde o botão de play inicialmente */
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .play-circle i, .play-circle2 i {
             color: white;
-            font-size: 30px; /* Tamanho do ícone */
-            margin-left: -5px; /* Move o ícone 5px para a esquerda */
+            font-size: 30px;
+            margin-left: -5px;
         }
 
-        .play-circlee i {
-            pointer-events: none; /* Permite que o clique passe através do ícone */
+        .play-circle2 i {
+            pointer-events: none;
         }
-
-        .play-circlee {
-            pointer-events: none; /* Permite que o clique passe através do ícone */
-        }
+        
     </style>
+
 </head>
 <body>
+
     <header>
         <h1>SARINHA LEITE - GALERIA</h1>
     </header>
 
     <section>
-        
-
-            
+    
             <div class="video-container">
                 <!-- Thumbnail inicial -->
                 <div class="thumbnail-wrapper">
@@ -272,9 +277,10 @@
                         class="video-thumbnail" 
                         src="https://www.dropbox.com/scl/fi/hyqpkwznbhn6pabmupcgb/1.webp?rlkey=oihg0u39t85hsn01ocfr9sxa2&st=6qtucu8r&raw=1" 
                         alt="Thumbnail" 
-                        data-video="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1">
+                        data-video="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1"
+                        onload="this.parentNode.querySelector('.play-circle').style.opacity = 1;"> <!-- Evento de carregamento -->
                     <!-- Ícone de play -->
-                    <div class="play-circlee">
+                    <div class="play-circle">
                         <i class="fas fa-play"></i> <!-- Ícone de Play -->
                     </div>
                 </div>
@@ -375,7 +381,7 @@
         const openPopup = (type, url, thumbnailSrc, index) => {
             // Limpa o conteúdo anterior
             popupContent.innerHTML = '';
-    
+
             if (type === 'image') {
                 // Cria e insere o elemento de imagem
                 const img = document.createElement('img');
@@ -384,54 +390,64 @@
                 popupContent.appendChild(img);
             } else if (type === 'video') {
                 // Cria e insere o elemento de thumbnail (primeiro)
-                const videoThumbnailContainer = document.createElement('div');
-                videoThumbnailContainer.classList.add('video-thumbnail-popup-container');
-                
                 const videoThumbnail = document.createElement('img');
                 videoThumbnail.src = thumbnailSrc; // Agora usamos o src da miniatura
                 videoThumbnail.alt = 'Miniatura do Vídeo';
                 videoThumbnail.classList.add('video-thumbnail-popup');
-                
-                // Cria e insere o novo botão de play (play-circle)
+                popupContent.appendChild(videoThumbnail);
+
+                // Cria e insere o botão de play com o novo estilo
                 const playButton = document.createElement('div');
-                playButton.classList.add('play-circle');
+                playButton.classList.add('play-circle2');
                 playButton.innerHTML = '<i class="fas fa-play"></i>'; // Ícone de play
-    
-                // Adiciona a miniatura e o botão de play ao container
-                videoThumbnailContainer.appendChild(videoThumbnail);
-                videoThumbnailContainer.appendChild(playButton);
-                
-                // Adiciona o container ao popup
-                popupContent.appendChild(videoThumbnailContainer);
-    
-                // Evento ao clicar em qualquer lugar da miniatura (não apenas no botão de play)
-                videoThumbnailContainer.addEventListener('click', () => {
+                popupContent.appendChild(playButton);
+
+                // Centraliza o botão de play sobre a miniatura
+                playButton.style.position = 'absolute';
+                playButton.style.top = '50%';
+                playButton.style.left = '50%';
+                playButton.style.transform = 'translate(-50%, -50%)';
+
+                // Evento ao clicar na miniatura para carregar o vídeo
+                videoThumbnail.addEventListener('click', () => {
                     // Exibe a palavra "Carregando..."
                     const loadingText = document.createElement('div');
                     loadingText.classList.add('loading-text');
                     loadingText.textContent = 'Carregando...';
                     popupContent.appendChild(loadingText);
                     loadingText.style.display = 'block';
-    
+
                     // Esconde o botão de play e a miniatura e carrega o vídeo
                     playButton.style.display = 'none';
                     loadVideo(url, videoThumbnail, loadingText);
                 });
+
+                // Também podemos permitir que o botão de play tenha a mesma função
+                playButton.addEventListener('click', () => {
+                    const loadingText = document.createElement('div');
+                    loadingText.classList.add('loading-text');
+                    loadingText.textContent = 'Carregando...';
+                    popupContent.appendChild(loadingText);
+                    loadingText.style.display = 'block';
+
+                    playButton.style.display = 'none';
+                    loadVideo(url, videoThumbnail, loadingText);
+                });
             }
-    
+
             popupContent.style.display = 'block';
             popup.style.display = 'flex';
             overlay.style.display = 'block';
-    
+
             currentIndex = index; // Atualiza o índice atual
-    
+
             // Exibe a mensagem "Arraste para o lado" na primeira vez
             if (isFirstTimePopupOpened) {
                 showDragMessage();
                 isFirstTimePopupOpened = false;
             }
         };
-    
+
         // Função para carregar o vídeo após clicar na miniatura ou botão de play
         const loadVideo = (url, thumbnail, loadingText) => {
             // Cria o elemento de vídeo
@@ -443,14 +459,14 @@
             source.src = url;
             source.type = 'video/webm';
             video.appendChild(source);
-    
+
             // Ao carregar o vídeo, esconde a miniatura e exibe o vídeo
             video.addEventListener('canplaythrough', () => {
                 thumbnail.style.display = 'none'; // Esconde a miniatura
                 video.style.display = 'block'; // Exibe o vídeo
                 loadingText.style.display = 'none'; // Esconde a palavra "Carregando..."
             });
-    
+
             popupContent.appendChild(video);
             video.style.display = 'none'; // Inicialmente escondido, até ser carregado
         };
@@ -572,7 +588,6 @@
             document.body.removeChild(textArea);
         });
     </script>
-    
     
 </body>
 </html>
