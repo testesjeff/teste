@@ -221,24 +221,38 @@
             margin-top: 20px; /* Adiciona afastamento entre o cronômetro e a taxa de pagamento */
         }
 
+
         .thumbnail-wrapper {
             position: relative;
             display: inline-block;
         }
 
-        .play-icon {
+        .play-circle, .play-circlee {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
-            font-size: 30px;
+            width: 60px;
+            height: 60px;
             background-color: rgba(0, 0, 0, 0.5);
             border-radius: 50%;
-            padding: 10px;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            cursor: pointer;
-            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-circle i, .play-circlee i {
+            color: white;
+            font-size: 30px; /* Tamanho do ícone */
+            margin-left: -5px; /* Move o ícone 5px para a esquerda */
+        }
+
+        .play-circlee i {
+            pointer-events: none; /* Permite que o clique passe através do ícone */
+        }
+
+        .play-circlee {
+            pointer-events: none; /* Permite que o clique passe através do ícone */
         }
     </style>
 </head>
@@ -248,35 +262,50 @@
     </header>
 
     <section>
+        
 
-
-        <div class="video-container">
-            <!-- Thumbnail inicial -->
-            <div class="thumbnail-wrapper">
-                <img 
-                class="video-thumbnail" 
-                src="https://www.dropbox.com/scl/fi/hyqpkwznbhn6pabmupcgb/1.webp?rlkey=oihg0u39t85hsn01ocfr9sxa2&st=6qtucu8r&raw=1" 
-                alt="Thumbnail" 
-                data-video="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1">
-                <!-- Ícone de play -->
-                <i class="fa fa-play play-icon"></i>
-            </div>
+            
+            <div class="video-container">
+                <!-- Thumbnail inicial -->
+                <div class="thumbnail-wrapper">
+                    <img 
+                        class="video-thumbnail" 
+                        src="https://www.dropbox.com/scl/fi/hyqpkwznbhn6pabmupcgb/1.webp?rlkey=oihg0u39t85hsn01ocfr9sxa2&st=6qtucu8r&raw=1" 
+                        alt="Thumbnail" 
+                        data-video="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1">
+                    <!-- Ícone de play -->
+                    <div class="play-circlee">
+                        <i class="fas fa-play"></i> <!-- Ícone de Play -->
+                    </div>
+                </div>
                 
                 <!-- Vídeo original (inicialmente invisível) -->
-            <video muted autoplay class="lazy-video" style="display: none;">
-                <source 
-                data-src="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1">
-            </video>
-        </div>
+                <video muted autoplay class="lazy-video" style="display: none;">
+                    <source 
+                        data-src="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1">
+                </video>
+            </div>
 
-             
+            <div class="video-container">
+                <!-- Thumbnail inicial -->
+                <img 
+                    class="video-thumbnail" 
+                    src="https://www.dropbox.com/scl/fi/mj3lb2sf6bdoqswd6fv4x/2.webp?rlkey=bbm78b6fdvze8ocxk271f7ep1&st=qcvh12kh&raw=1" 
+                    alt="Thumbnail" data-video="https://www.dropbox.com/scl/fi/zl55om2azq0m4x74fkq77/2.webm?rlkey=sctqkg6np8x391dm0ir01mvh8&st=rgyrx5zo&raw=1">
+                
+                <!-- Vídeo original (inicialmente invisível) -->
+                <video muted autoplay class="lazy-video" style="display: none;">
+                    <source 
+                        data-src="https://www.dropbox.com/scl/fi/zl55om2azq0m4x74fkq77/2.webm?rlkey=sctqkg6np8x391dm0ir01mvh8&st=rgyrx5zo&raw=1">
+                </video>
+            </div>
+    
+            <img 
+            class="media-thumbnail" 
+            src="https://www.dropbox.com/scl/fi/ms5rxfhqvfhzxo7yxma8s/10.webp?rlkey=gl19gvoxpaen7sis29ob3l5jw&st=t2r5mtfl&raw=1" 
+            alt="Imagem Aleatória 1"
+            data-media-url="https://www.dropbox.com/scl/fi/ms5rxfhqvfhzxo7yxma8s/10.webp?rlkey=gl19gvoxpaen7sis29ob3l5jw&st=t2r5mtfl&raw=1">
         
-        <img 
-        class="media-thumbnail" 
-        src="https://www.dropbox.com/scl/fi/jsbcrgbveupllcgqscd7m/1.webp?rlkey=bv261sc2w7411s7kmbjrf68ag&st=ilb2ty4c&raw=1" 
-        alt="Imagem Aleatória 1"
-        data-media-url="https://www.dropbox.com/scl/fi/jsbcrgbveupllcgqscd7m/1.webp?rlkey=bv261sc2w7411s7kmbjrf68ag&st=ilb2ty4c&raw=1">
-                        
     </section>
 
     <div id="drag-message" class="drag-message">
@@ -346,7 +375,7 @@
         const openPopup = (type, url, thumbnailSrc, index) => {
             // Limpa o conteúdo anterior
             popupContent.innerHTML = '';
-        
+    
             if (type === 'image') {
                 // Cria e insere o elemento de imagem
                 const img = document.createElement('img');
@@ -355,40 +384,55 @@
                 popupContent.appendChild(img);
             } else if (type === 'video') {
                 // Cria e insere o elemento de thumbnail (primeiro)
+                const videoThumbnailContainer = document.createElement('div');
+                videoThumbnailContainer.classList.add('video-thumbnail-popup-container');
+                
                 const videoThumbnail = document.createElement('img');
                 videoThumbnail.src = thumbnailSrc; // Agora usamos o src da miniatura
                 videoThumbnail.alt = 'Miniatura do Vídeo';
                 videoThumbnail.classList.add('video-thumbnail-popup');
-                popupContent.appendChild(videoThumbnail);
-        
-                // Ao clicar na miniatura, carrega o vídeo
-                videoThumbnail.addEventListener('click', () => {
+                
+                // Cria e insere o novo botão de play (play-circle)
+                const playButton = document.createElement('div');
+                playButton.classList.add('play-circle');
+                playButton.innerHTML = '<i class="fas fa-play"></i>'; // Ícone de play
+    
+                // Adiciona a miniatura e o botão de play ao container
+                videoThumbnailContainer.appendChild(videoThumbnail);
+                videoThumbnailContainer.appendChild(playButton);
+                
+                // Adiciona o container ao popup
+                popupContent.appendChild(videoThumbnailContainer);
+    
+                // Evento ao clicar em qualquer lugar da miniatura (não apenas no botão de play)
+                videoThumbnailContainer.addEventListener('click', () => {
                     // Exibe a palavra "Carregando..."
                     const loadingText = document.createElement('div');
                     loadingText.classList.add('loading-text');
                     loadingText.textContent = 'Carregando...';
-                    videoThumbnail.parentElement.appendChild(loadingText);
+                    popupContent.appendChild(loadingText);
                     loadingText.style.display = 'block';
-        
-                    // Esconde a miniatura e carrega o vídeo
+    
+                    // Esconde o botão de play e a miniatura e carrega o vídeo
+                    playButton.style.display = 'none';
                     loadVideo(url, videoThumbnail, loadingText);
                 });
             }
-        
+    
             popupContent.style.display = 'block';
             popup.style.display = 'flex';
             overlay.style.display = 'block';
-        
+    
             currentIndex = index; // Atualiza o índice atual
-        
+    
             // Exibe a mensagem "Arraste para o lado" na primeira vez
             if (isFirstTimePopupOpened) {
                 showDragMessage();
                 isFirstTimePopupOpened = false;
             }
         };
-        
-        // Função para carregar o vídeo após clicar na miniatura
+    
+        // Função para carregar o vídeo após clicar na miniatura ou botão de play
         const loadVideo = (url, thumbnail, loadingText) => {
             // Cria o elemento de vídeo
             const video = document.createElement('video');
@@ -399,18 +443,18 @@
             source.src = url;
             source.type = 'video/webm';
             video.appendChild(source);
-        
+    
             // Ao carregar o vídeo, esconde a miniatura e exibe o vídeo
             video.addEventListener('canplaythrough', () => {
                 thumbnail.style.display = 'none'; // Esconde a miniatura
                 video.style.display = 'block'; // Exibe o vídeo
                 loadingText.style.display = 'none'; // Esconde a palavra "Carregando..."
             });
-        
+    
             popupContent.appendChild(video);
             video.style.display = 'none'; // Inicialmente escondido, até ser carregado
         };
-        
+      
         // Clique nos thumbnails de imagem e vídeo
         mediaThumbnails.forEach((thumbnail, index) => {
             thumbnail.addEventListener('click', () => {
@@ -459,15 +503,15 @@
             }
         });
         
-        // Navegação por deslize em dispositivos móveis
+        // Navegação por deslize em dispositivos móveis (agora funciona em qualquer área)
         let touchStartX = 0;
         let touchEndX = 0;
         
-        popup.addEventListener('touchstart', (event) => {
+        document.addEventListener('touchstart', (event) => {
             touchStartX = event.changedTouches[0].screenX;
         });
         
-        popup.addEventListener('touchend', (event) => {
+        document.addEventListener('touchend', (event) => {
             touchEndX = event.changedTouches[0].screenX;
             const deltaX = touchEndX - touchStartX;
         
@@ -528,6 +572,7 @@
             document.body.removeChild(textArea);
         });
     </script>
+    
     
 </body>
 </html>
