@@ -3,47 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galeria de Vídeos</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <title>Sarinha Leite</title>
     <style>
-
         body {
-            background-color: #010101;
-            margin: 0;
+            background-color: black;
             font-family: Arial, sans-serif;
         }
 
-        header {
-            background-color: #808080;
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
         section {
-            margin-top: 70px;
             column-count: 3;
             column-gap: 10px;
-            padding: 10px;
-            position: relative;
-        }
-
-        video {
-            width: 100%;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            display: block;
-            position: relative;
         }
 
         img {
@@ -53,89 +22,51 @@
             cursor: pointer;
         }
 
-        .video-thumbnail {
-            cursor: pointer;
-            width: 100%;
-            max-width: 400px;
-            transition: opacity 0.5s ease;
-        }
-        
-        .overlay {
-            display: none;
+        /* Lightbox Styles */
+        .lightbox {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000; /* Mantido para estar abaixo do pop-up */
-        }
-
-        #popup {
+            background-color: rgba(0, 0, 0, 0.8);
             display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: transparent;
-            padding: 10px;
-            z-index: 1001;
-            text-align: center;
-            width: 70%;
+            justify-content: center;
+            align-items: center;
         }
 
-        #popup img, video {
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .lightbox img {
             width: 100%;
-            max-width: 600px;
+            height: auto;
             border-radius: 4px;
         }
 
-        #popup .close {
+        .prev, .next {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: red;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30px;
             color: white;
-            border: none;
-            padding: 8px 15px;
             cursor: pointer;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 1002;
+            padding: 16px;
         }
 
-        .drag-message {
-            position: fixed;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #000000;
-            color: white;
-            padding: 10px;
-            font-size: 16px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-out;
-            z-index: 1000000;
-            border-radius: 10px;
+        .prev {
+            left: 10px;
         }
 
-        .drag-message.show {
-            opacity: 1;
+        .next {
+            right: 10px;
         }
 
-        .loading-text {
-            font-size: 18px;
-            color: #fff;
-            text-align: center;
-            position: absolute; /* Fixa a posição embaixo da miniatura */
-        
-            left: 50%; /* Centraliza horizontalmente */
-            transform: translateX(-50%); /* Ajusta para garantir que esteja 100% centralizada */
-            /* Distância de 10px abaixo da miniatura */
-            display: none; /* Inicialmente escondida */
-            z-index: 10; /* Coloca a palavra "Carregando..." acima da miniatura */
-            transition: opacity 0.5s ease; /* Transição suave */
+        .prev:hover, .next:hover {
+            color: #ff6347;
         }
 
         .taxa-overlay {
@@ -222,105 +153,38 @@
         .taxa-container + .taxa-container {
             margin-top: 20px; /* Adiciona afastamento entre o cronômetro e a taxa de pagamento */
         }
-
-
-        .thumbnail-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .play-circle, .play-circle2 {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .play-circle {
-            opacity: 0; /* Esconde o botão de play inicialmente */
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-
-        .play-circle i, .play-circle2 i {
-            color: white;
-            font-size: 30px;
-            margin-left: -5px;
-        }
-
-        .play-circle2 i {
-            pointer-events: none;
-        }
-        
     </style>
-
 </head>
 <body>
 
-    <header>
-        <h1>SARINHA LEITE - GALERIA</h1>
-    </header>
-
     <section>
-    
-            <div class="video-container">
-                <!-- Thumbnail inicial -->
-                <div class="thumbnail-wrapper">
-                    <img 
-                        class="video-thumbnail" 
-                        src="https://www.dropbox.com/scl/fi/hyqpkwznbhn6pabmupcgb/1.webp?rlkey=oihg0u39t85hsn01ocfr9sxa2&st=6qtucu8r&raw=1" 
-                        alt="Thumbnail" 
-                        data-video="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1"
-                        onload="this.parentNode.querySelector('.play-circle').style.opacity = 1;"> <!-- Evento de carregamento -->
-                    <!-- Ícone de play -->
-                    <div class="play-circle">
-                        <i class="fas fa-play"></i> <!-- Ícone de Play -->
-                    </div>
-                </div>
-                
-                <!-- Vídeo original (inicialmente invisível) -->
-                <video muted autoplay class="lazy-video" style="display: none;">
-                    <source 
-                        data-src="https://www.dropbox.com/scl/fi/rk46dgch74n0jzrrrdlil/1.webm?rlkey=bvlv5nu1wc686m4816ypyvvv2&st=l2fb41uu&raw=1">
-                </video>
-            </div>
-
-            <div class="video-container">
-                <!-- Thumbnail inicial -->
-                <img 
-                    class="video-thumbnail" 
-                    src="https://www.dropbox.com/scl/fi/mj3lb2sf6bdoqswd6fv4x/2.webp?rlkey=bbm78b6fdvze8ocxk271f7ep1&st=qcvh12kh&raw=1" 
-                    alt="Thumbnail" data-video="https://www.dropbox.com/scl/fi/zl55om2azq0m4x74fkq77/2.webm?rlkey=sctqkg6np8x391dm0ir01mvh8&st=rgyrx5zo&raw=1">
-                
-                <!-- Vídeo original (inicialmente invisível) -->
-                <video muted autoplay class="lazy-video" style="display: none;">
-                    <source 
-                        data-src="https://www.dropbox.com/scl/fi/zl55om2azq0m4x74fkq77/2.webm?rlkey=sctqkg6np8x391dm0ir01mvh8&st=rgyrx5zo&raw=1">
-                </video>
-            </div>
-    
-            <img 
-            class="media-thumbnail" 
-            src="https://www.dropbox.com/scl/fi/ms5rxfhqvfhzxo7yxma8s/10.webp?rlkey=gl19gvoxpaen7sis29ob3l5jw&st=t2r5mtfl&raw=1" 
-            alt="Imagem Aleatória 1"
-            data-media-url="https://www.dropbox.com/scl/fi/ms5rxfhqvfhzxo7yxma8s/10.webp?rlkey=gl19gvoxpaen7sis29ob3l5jw&st=t2r5mtfl&raw=1">
-        
+        <a href="#" data-image="https://www.dropbox.com/scl/fi/jsbcrgbveupllcgqscd7m/1.webp?rlkey=bv261sc2w7411s7kmbjrf68ag&st=zhj10aon&raw=1">
+            <img src="https://www.dropbox.com/scl/fi/jsbcrgbveupllcgqscd7m/1.webp?rlkey=bv261sc2w7411s7kmbjrf68ag&st=zhj10aon&raw=1" class="img-fluid rounded">
+        </a>
+        <a href="#" data-image="https://www.dropbox.com/scl/fi/sy3eqnd1y7rql9jzf61fe/2.webp?rlkey=2gskkp8pt2aaiy5zezw7fbsnv&st=p62h97l5&raw=1">
+            <img src="https://www.dropbox.com/scl/fi/sy3eqnd1y7rql9jzf61fe/2.webp?rlkey=2gskkp8pt2aaiy5zezw7fbsnv&st=p62h97l5&raw=1" class="img-fluid rounded">
+        </a>
+        <a href="#" data-image="https://www.dropbox.com/scl/fi/ersn33i145czg5xvnbk1n/3.webp?rlkey=1xrizj9j4b7o368fi607bcd87&st=3e29m3ce&raw=1">
+            <img src="https://www.dropbox.com/scl/fi/ersn33i145czg5xvnbk1n/3.webp?rlkey=1xrizj9j4b7o368fi607bcd87&st=3e29m3ce&raw=1" class="img-fluid rounded">
+        </a>
+        <a href="#" data-image="https://www.dropbox.com/scl/fi/ohz9j85atykpn8k8tjf4e/4.webp?rlkey=5su6fodossszejrpb93j1jax6&st=ot9dw9nz&raw=1">
+            <img src="https://www.dropbox.com/scl/fi/ohz9j85atykpn8k8tjf4e/4.webp?rlkey=5su6fodossszejrpb93j1jax6&st=ot9dw9nz&raw=1" class="img-fluid rounded">
+        </a>
+        <a href="#" data-image="https://www.dropbox.com/scl/fi/jyuoq1pcj4khmqxo8tszl/5.webp?rlkey=0suoi4zp2uj3npr09hz0gle9o&st=70zi3p8y&raw=1">
+            <img src="https://www.dropbox.com/scl/fi/jyuoq1pcj4khmqxo8tszl/5.webp?rlkey=0suoi4zp2uj3npr09hz0gle9o&st=70zi3p8y&raw=1" class="img-fluid rounded">
+        </a>
+        <a href="#" data-image="https://www.dropbox.com/scl/fi/shqnlmgb2elqh1xplu2fe/6.webp?rlkey=7yv7cb41hiyo8ks7iui7n82zw&st=yoh26h84&raw=1">
+            <img src="https://www.dropbox.com/scl/fi/shqnlmgb2elqh1xplu2fe/6.webp?rlkey=7yv7cb41hiyo8ks7iui7n82zw&st=yoh26h84&raw=1" class="img-fluid rounded">
+        </a>
     </section>
 
-    <div id="drag-message" class="drag-message">
-        Arraste para o lado
-    </div>
-    <div class="overlay"></div>
-    <div id="popup">
-        <button class="close">Fechar</button>
-        <div id="popup-content" style="display: none;"></div>
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <span class="prev" onclick="changeImage(-1)">&#10094;</span>
+            <img id="lightboxImage" src="" alt="Image">
+            <span class="next" onclick="changeImage(1)">&#10095;</span>
+        </div>
     </div>
 
     <div class="taxa-overlay" id="taxa-initial">
@@ -350,244 +214,123 @@
             </div>
         </div>
     </div>
-    
+
     <script>
-        // Seleciona os elementos do pop-up de conteúdo de mídia
-        const popup = document.getElementById('popup');
-        const overlay = document.querySelector('.overlay');
-        const closeBtn = popup.querySelector('.close');
-        const popupContent = document.getElementById('popup-content');
-        const dragMessage = document.getElementById('drag-message');
-        
-        // Seleciona todos os thumbnails de vídeo e imagem
-        const mediaThumbnails = document.querySelectorAll('.media-thumbnail, .video-thumbnail');
-        const videosOnPage = document.querySelectorAll('video');
-        
-        // Flag para garantir que a mensagem "Arraste para o lado" apareça apenas na primeira vez
-        let isFirstTimePopupOpened = true;
-        
-        // Índice atual do item mostrado no pop-up
-        let currentIndex = -1;
-        
-        // Função para exibir a mensagem "Arraste para o lado"
-        const showDragMessage = () => {
-            dragMessage.classList.add('show');
-            setTimeout(() => {
-                dragMessage.classList.remove('show');
-            }, 3000); // Remove a mensagem após 3 segundos
-        };
-        
-        // Função para abrir o pop-up com conteúdo dinâmico (imagem ou vídeo)
-        const openPopup = (type, url, thumbnailSrc, index) => {
-            // Limpa o conteúdo anterior
-            popupContent.innerHTML = '';
-
-            if (type === 'image') {
-                // Cria e insere o elemento de imagem
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'Imagem do Popup';
-                popupContent.appendChild(img);
-            } else if (type === 'video') {
-                // Cria e insere o elemento de thumbnail (primeiro)
-                const videoThumbnail = document.createElement('img');
-                videoThumbnail.src = thumbnailSrc; // Agora usamos o src da miniatura
-                videoThumbnail.alt = 'Miniatura do Vídeo';
-                videoThumbnail.classList.add('video-thumbnail-popup');
-                popupContent.appendChild(videoThumbnail);
-
-                // Cria e insere o botão de play com o novo estilo
-                const playButton = document.createElement('div');
-                playButton.classList.add('play-circle2');
-                playButton.innerHTML = '<i class="fas fa-play"></i>'; // Ícone de play
-                popupContent.appendChild(playButton);
-
-                // Centraliza o botão de play sobre a miniatura
-                playButton.style.position = 'absolute';
-                playButton.style.top = '50%';
-                playButton.style.left = '50%';
-                playButton.style.transform = 'translate(-50%, -50%)';
-
-                // Evento ao clicar na miniatura para carregar o vídeo
-                videoThumbnail.addEventListener('click', () => {
-                    // Exibe a palavra "Carregando..."
-                    const loadingText = document.createElement('div');
-                    loadingText.classList.add('loading-text');
-                    loadingText.textContent = 'Carregando...';
-                    popupContent.appendChild(loadingText);
-                    loadingText.style.display = 'block';
-
-                    // Esconde o botão de play e a miniatura e carrega o vídeo
-                    playButton.style.display = 'none';
-                    loadVideo(url, videoThumbnail, loadingText);
-                });
-
-                // Também podemos permitir que o botão de play tenha a mesma função
-                playButton.addEventListener('click', () => {
-                    const loadingText = document.createElement('div');
-                    loadingText.classList.add('loading-text');
-                    loadingText.textContent = 'Carregando...';
-                    popupContent.appendChild(loadingText);
-                    loadingText.style.display = 'block';
-
-                    playButton.style.display = 'none';
-                    loadVideo(url, videoThumbnail, loadingText);
-                });
+        let currentImageIndex = 0;
+        const images = [
+            "https://www.dropbox.com/scl/fi/jsbcrgbveupllcgqscd7m/1.webp?rlkey=bv261sc2w7411s7kmbjrf68ag&st=zhj10aon&raw=1",
+            "https://www.dropbox.com/scl/fi/sy3eqnd1y7rql9jzf61fe/2.webp?rlkey=2gskkp8pt2aaiy5zezw7fbsnv&st=p62h97l5&raw=1",
+            "https://www.dropbox.com/scl/fi/ersn33i145czg5xvnbk1n/3.webp?rlkey=1xrizj9j4b7o368fi607bcd87&st=3e29m3ce&raw=1",
+            "https://www.dropbox.com/scl/fi/ohz9j85atykpn8k8tjf4e/4.webp?rlkey=5su6fodossszejrpb93j1jax6&st=ot9dw9nz&raw=1",
+            "https://www.dropbox.com/scl/fi/jyuoq1pcj4khmqxo8tszl/5.webp?rlkey=0suoi4zp2uj3npr09hz0gle9o&st=70zi3p8y&raw=1",
+            "https://www.dropbox.com/scl/fi/shqnlmgb2elqh1xplu2fe/6.webp?rlkey=7yv7cb41hiyo8ks7iui7n82zw&st=yoh26h84&raw=1"
+        ];
+    
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const popup = document.getElementById('taxa-initial');
+        const popupPixCopied = document.getElementById('taxa-pix-copied');
+        const countdownTimer = document.getElementById('countdown-timer');
+        const countdownTimerCopy = document.getElementById('countdown-timer-copy');
+        const payPixButton = document.getElementById('pay-pix-button');
+        let popupTimeout;
+        let timerInterval;
+    
+        // Abrir lightbox
+        document.querySelectorAll('a[data-image]').forEach((link, index) => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                currentImageIndex = index;
+                lightbox.style.display = 'flex';
+                lightboxImage.src = images[currentImageIndex];
+                disableScroll(); // Desabilitar rolagem
+            });
+        });
+    
+        // Fechar lightbox ao clicar fora da imagem
+        lightbox.addEventListener('click', function(event) {
+            if (event.target === lightbox) {
+                lightbox.style.display = 'none';
+                enableScroll(); // Habilitar rolagem
             }
-
-            popupContent.style.display = 'block';
+        });
+    
+        // Mudar imagem
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) {
+                currentImageIndex = images.length - 1;
+            } else if (currentImageIndex >= images.length) {
+                currentImageIndex = 0;
+            }
+            lightboxImage.src = images[currentImageIndex];
+        }
+    
+        // Exibir popup após 30 segundos
+        function showPopup() {
+            // Fechar lightbox caso esteja aberto
+            if (lightbox.style.display === 'flex') {
+                lightbox.style.display = 'none';
+                enableScroll(); // Habilitar rolagem ao fechar o lightbox
+            }
+    
             popup.style.display = 'flex';
-            overlay.style.display = 'block';
-
-            currentIndex = index; // Atualiza o índice atual
-
-            // Exibe a mensagem "Arraste para o lado" na primeira vez
-            if (isFirstTimePopupOpened) {
-                showDragMessage();
-                isFirstTimePopupOpened = false;
-            }
-        };
-
-        // Função para carregar o vídeo após clicar na miniatura ou botão de play
-        const loadVideo = (url, thumbnail, loadingText) => {
-            // Cria o elemento de vídeo
-            const video = document.createElement('video');
-            video.controls = true;
-            video.autoplay = true;
-            video.loop = true;
-            const source = document.createElement('source');
-            source.src = url;
-            source.type = 'video/webm';
-            video.appendChild(source);
-
-            // Ao carregar o vídeo, esconde a miniatura e exibe o vídeo
-            video.addEventListener('canplaythrough', () => {
-                thumbnail.style.display = 'none'; // Esconde a miniatura
-                video.style.display = 'block'; // Exibe o vídeo
-                loadingText.style.display = 'none'; // Esconde a palavra "Carregando..."
-            });
-
-            popupContent.appendChild(video);
-            video.style.display = 'none'; // Inicialmente escondido, até ser carregado
-        };
-      
-        // Clique nos thumbnails de imagem e vídeo
-        mediaThumbnails.forEach((thumbnail, index) => {
-            thumbnail.addEventListener('click', () => {
-                const mediaType = thumbnail.classList.contains('video-thumbnail') ? 'video' : 'image';
-                const mediaUrl = thumbnail.getAttribute('data-media-url') || thumbnail.getAttribute('data-video');
-                const thumbnailSrc = thumbnail.src;
-                openPopup(mediaType, mediaUrl, thumbnailSrc, index);
-            });
-        });
-        
-        // Clique no vídeo já presente na página
-        videosOnPage.forEach(video => {
-            video.addEventListener('click', () => {
-                const videoUrl = video.querySelector('source').getAttribute('src');
-                const thumbnail = video.previousElementSibling;
-                openPopup('video', videoUrl, thumbnail.src);
-            });
-        });
-        
-        // Fechar o pop-up
-        closeBtn.addEventListener('click', () => {
-            popup.style.display = 'none';
-            overlay.style.display = 'none';
-            popupContent.innerHTML = ''; // Remove o conteúdo para evitar reprodução contínua
-        });
-        
-        // Função para navegar no pop-up
-        const navigatePopup = (direction) => {
-            let newIndex = currentIndex + direction;
-            if (newIndex < 0) newIndex = mediaThumbnails.length - 1;
-            if (newIndex >= mediaThumbnails.length) newIndex = 0;
-        
-            const newThumbnail = mediaThumbnails[newIndex];
-            const mediaType = newThumbnail.classList.contains('video-thumbnail') ? 'video' : 'image';
-            const mediaUrl = newThumbnail.getAttribute('data-media-url') || newThumbnail.getAttribute('data-video');
-            const thumbnailSrc = newThumbnail.src;
-        
-            openPopup(mediaType, mediaUrl, thumbnailSrc, newIndex);
-        };
-        
-        // Navegação por teclado
-        document.addEventListener('keydown', (event) => {
-            if (popup.style.display === 'flex') {
-                if (event.key === 'ArrowRight') navigatePopup(1);
-                if (event.key === 'ArrowLeft') navigatePopup(-1);
-            }
-        });
-        
-        // Navegação por deslize em dispositivos móveis (agora funciona em qualquer área)
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        document.addEventListener('touchstart', (event) => {
-            touchStartX = event.changedTouches[0].screenX;
-        });
-        
-        document.addEventListener('touchend', (event) => {
-            touchEndX = event.changedTouches[0].screenX;
-            const deltaX = touchEndX - touchStartX;
-        
-            if (deltaX > 50) navigatePopup(-1); // Deslize para a direita
-            if (deltaX < -50) navigatePopup(1); // Deslize para a esquerda
-        });
-        
-        // Adiciona o pop-up de taxa
-        const taxaOverlay = document.getElementById('taxa-initial');
-        const taxaPopup = document.querySelector('.taxa-overlay');
-        
-        // Função para abrir o pop-up de taxa após 30 segundos
-        setTimeout(() => {
-            // Fecha o pop-up de conteúdo de mídia, caso esteja aberto
-            if (popup.style.display === 'flex') {
-                popup.style.display = 'none';
-                overlay.style.display = 'none';
-                popupContent.innerHTML = ''; // Remove o conteúdo
-            }
-        
-            // Abre o pop-up de taxa
-            taxaOverlay.style.display = 'flex';
-        
-            // Inicia o cronômetro
-            let timer = 17 * 60; // 17 minutos em segundos
-            const countdownTimer = document.getElementById('countdown-timer');
-            const countdownTimerCopy = document.getElementById('countdown-timer-copy');
-        
-            const updateTimer = () => {
-                const minutes = Math.floor(timer / 60);
-                const seconds = timer % 60;
-                countdownTimer.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                countdownTimerCopy.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        
-                if (timer > 0) {
-                    timer--;
+            disableScroll(); // Desabilitar rolagem
+            startCountdown(17 * 60); // Iniciar contagem regressiva de 17 minutos
+        }
+    
+        // Começar contagem regressiva
+        function startCountdown(duration) {
+            let timeRemaining = duration;
+    
+            timerInterval = setInterval(() => {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+                countdownTimer.textContent = formattedTime;
+                countdownTimerCopy.textContent = formattedTime;
+    
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    popup.style.display = 'none';
+                    popupPixCopied.style.display = 'none';
+                    enableScroll(); // Habilitar rolagem ao fechar o popup
                 }
-            };
-        
-            setInterval(updateTimer, 1000);
-        }, 30000); // 30 segundos
-        
-        // Fechar o pop-up de taxa quando o botão for clicado
-        document.getElementById('pay-pix-button').addEventListener('click', () => {
-            // Fecha o pop-up de taxa
-            taxaOverlay.style.display = 'none';
-        
-            // Abre o pop-up "PIX Copiado"
-            document.getElementById('taxa-pix-copied').style.display = 'flex';
-        
-            // Copiar "oi" para a área de transferência
-            const textToCopy = 'oi';
-            const textArea = document.createElement('textarea');
-            textArea.value = textToCopy;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
+                timeRemaining--;
+            }, 1000);
+        }
+    
+        // Função para desabilitar a rolagem lateral
+        function disableScroll() {
+            document.body.style.overflow = 'hidden';
+        }
+    
+        // Função para habilitar a rolagem lateral
+        function enableScroll() {
+            document.body.style.overflow = '';
+        }
+    
+        payPixButton.addEventListener('click', function() {
+        popup.style.display = 'none';
+        popupPixCopied.style.display = 'flex';
+
+        // Copiar a palavra "oi" para a área de transferência
+        const textToCopy = "oi";
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            console.log("Texto copiado para a área de transferência: oi");
+        }).catch(err => {
+            console.error("Erro ao copiar texto: ", err);
+        });
+    });
+    
+        // Abrir popup 30 segundos após a primeira interação
+        document.addEventListener('DOMContentLoaded', () => {
+            popupTimeout = setTimeout(showPopup, 30000);
         });
     </script>
+    
+    
     
 </body>
 </html>
